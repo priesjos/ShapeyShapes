@@ -8,11 +8,8 @@ public class Board extends JPanel implements ActionListener {
 
     Game game;
     Timer timer;
-    Food food;
-    Enemy enemy;
-    Player player;
-    ArrayList<Food> foods = new ArrayList<Food>();
-    ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+    ArrayList<Sprite> actors;
+    int padding = 25;
 
     public Board(Game game){
         this.game = game;
@@ -21,42 +18,30 @@ public class Board extends JPanel implements ActionListener {
     }
 
     public void init(){
-        player = new Player(Color.green, 50, 50, 15, 15, this);
+        actors = new ArrayList<>();
 
-        for (int i = 0; i < (int)(Math.random()*4)+2; i++){
-            foods.add(new Food(Color.YELLOW, 0, 200, 20, 20, this));
+        actors.add(new Player(Color.green, getWidth()/2, getHeight()/2, 25, 85, this));
+
+        for (int i = 0; i < STATS.numFood; i++){
+            actors.add(new Food(Color.YELLOW, (int)(Math.random()*(getWidth()-padding)+padding), (int)(Math.random()*(getHeight()-padding)+padding), 20, 20, this));
         }
 
-        for (int i = 0; i < (int)(Math.random()*3)+1; i++){
-            enemies.add(new Enemy(Color.WHITE, 0, 400, 20, 20, this));
+        for (int i = 0; i < STATS.numEnemies; i++){
+            actors.add(new Enemy(Color.WHITE, (int)(Math.random()*(getWidth()-padding)+padding), (int)(Math.random()*(getHeight()-padding)+padding), 20, 20, this));
         }
+
         timer = new Timer(1000/60, this);
         timer.start();
     }
 
-    public void paintComponent(Graphics g){;
+    public void paintComponent(Graphics g){
         super.paintComponent(g);
-
-        player.paint(g);
-
-        for (Food food: foods) {
-            food.paint(g);
-        }
-
-        for (Enemy enemy: enemies){
-            enemy.paint(g);
-        }
-
+        for (Sprite actor: actors) {actor.paint(g); }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        for (Food food: foods){
-            food.move(this);
-        }
-        for (Enemy enemy: enemies){
-            enemy.move(this);
-        }
+        for (Sprite actor: actors) {actor.move(this); }
         repaint();
     }
 }
