@@ -24,18 +24,18 @@ public abstract class Sprite {
             dy = Math.sin(angle)*speed;
         }
     }
-/*
-    public void paint(Graphics g, Color color, int x, int y, int diameter, boolean isCircle){
-        g.setColor(color);
-        if (isCircle)
-            g.fillOval(x, y, diameter, diameter);
-        else
-            g.fillRect(x, y, diameter, diameter);
-    }*/
+
+    public Rectangle getBounds(){
+        return new Rectangle(getX(), getY(), getWidth(), getHeight());
+    }
+
+    public boolean collidesWith(Sprite other){
+        return getBounds().intersects(other.getBounds());
+    }
 
     public abstract void paint(Graphics g);
 
-    public void move(Board board){
+    public void move(){
 
         //Predictive movement
         double nextLeft = x + dx;

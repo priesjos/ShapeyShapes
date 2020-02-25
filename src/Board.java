@@ -20,7 +20,7 @@ public class Board extends JPanel implements ActionListener {
     public void init(){
         actors = new ArrayList<>();
 
-        actors.add(new Player(Color.green, getWidth()/2, getHeight()/2, 25, 85, this));
+        actors.add(new Player(Color.green, getWidth()/2, getHeight()/2, 25, 85, this, game));
 
         for (int i = 0; i < STATS.numFood; i++){
             actors.add(new Food(Color.YELLOW, (int)(Math.random()*(getWidth()-padding)+padding), (int)(Math.random()*(getHeight()-padding)+padding), 20, 20, this));
@@ -41,7 +41,17 @@ public class Board extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        for (Sprite actor: actors) {actor.move(this); }
+        for (Sprite actor: actors) {actor.move(); }
         repaint();
+
+        for (int i = 1; i < actors.size(); i++){
+            if (actors.get(0).collidesWith(actors.get(i))){
+                if (actors.get(i) instanceof Enemy){
+                    System.out.println("DIED");
+                }
+                else
+                    System.out.println("FEASTED");
+            }
+        }
     }
 }
