@@ -10,6 +10,7 @@ public class Board extends JPanel implements ActionListener {
     Timer timer;
     ArrayList<Sprite> actors;
     int padding = 25;
+    long nextMoment;
 
     public Board(Game game){
         this.game = game;
@@ -41,10 +42,11 @@ public class Board extends JPanel implements ActionListener {
 
     public void checkCollisions(){
         for (int i = 1; i < actors.size(); i++){
-            if (actors.get(0).collidesWith(actors.get(i))){
+            if (actors.get(0) instanceof Player && actors.get(0).collidesWith(actors.get(i))){
 
                 if (actors.get(i) instanceof Enemy){
                     actors.get(0).setRemove(true);
+                    game.setMouseClicked(false);
                 }
                 else
                     actors.get(i).setRemove(true);
@@ -59,13 +61,22 @@ public class Board extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        nextMoment = System.currentTimeMillis();
 
-        checkCollisions();
-        for (Sprite actor: actors) {actor.move(); }
+        if ((nextMoment - game.getMoment()) >= 1500){
+            checkCollisions();
+        }
+
+        if (game.isMouseClicked()){
+            for (Sprite actor: actors) {actor.move(); }
+        }
+
 
         if (actors.size() <= STATS.getNumEnemies()+1){
             System.out.println("LEVEL PASSED");
+            game.setMouseClicked(false);
         }
+
         repaint();
 
     }
